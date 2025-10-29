@@ -82,6 +82,4 @@ This approach simulates a lightweight, cloud-based CI/CD workflow for data analy
 ## Author
 
 Created by **Khushi Patel**  
-📍 Charlotte, NC  
-💻 [GitHub Profile](https://github.com/khshiptl)
 
