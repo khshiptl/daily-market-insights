@@ -1,0 +1,37 @@
+import yfinance as yf
+import pandas as pd
+from datetime import datetime
+
+# List of stock symbols to track
+symbols = ["AAPL", "MSFT", "GOOG", "AMZN", "META"]
+
+def fetch_stock_data(symbols):
+    data = {}
+    for symbol in symbols:
+        ticker = yf.Ticker(symbol)
+        hist = ticker.history(period="1d", interval="1h")
+        if not hist.empty:
+            latest = hist.tail(1)
+            data[symbol] = {
+                "Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "Open": float(latest["Open"]),
+                "Close": float(latest["Close"]),
+                "High": float(latest["High"]),
+                "Low": float(latest["Low"]),
+                "Volume": int(latest["Volume"]),
+                "Percent Change": round((latest["Close"].iloc[0] - latest["Open"].iloc[0]) / latest["Open"].iloc[0] * 100, 2)
+            }
+    return pd.DataFrame(data).T
+
+def save_summary(df):
+    output_path = "data/daily_summary.csv"
+    df.to_csv(output_path, index=True)
+    print(f"Saved summary to {output_path}")
+
+if __name__ == "__main__":
+    df = fetch_stock_data(symbols)
+    if not df.empty:
+        save_summary(df)
+    else:
+        print("No data fetched.")
+
