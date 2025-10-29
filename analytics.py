@@ -23,10 +23,20 @@ def fetch_stock_data(symbols):
             }
     return pd.DataFrame(data).T
 
+import os
+
 def save_summary(df):
     output_path = "data/daily_summary.csv"
-    df.to_csv(output_path, index=True)
-    print(f"Saved summary to {output_path}")
+    
+    if os.path.exists(output_path):
+        existing = pd.read_csv(output_path, index_col=0)
+        updated = pd.concat([existing, df])
+        updated.to_csv(output_path, index=True)
+        print(f"Appended new data to {output_path}")
+    else:
+        df.to_csv(output_path, index=True)
+        print(f"Created new file {output_path}")
+
 
 if __name__ == "__main__":
     df = fetch_stock_data(symbols)
